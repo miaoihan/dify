@@ -34,6 +34,8 @@ class CompletionService:
     def completion(cls, app_model: App, user: Union[Account, EndUser], args: Any,
                    from_source: str, streaming: bool = True,
                    is_model_config_override: bool = False) -> Union[dict, Generator]:
+        # 如果传了model_config，is_model_config_override=true，否则false
+        is_model_config_override = True if 'model_config' in args else False    
         # is streaming mode
         inputs = args['inputs']
         query = args['query']
