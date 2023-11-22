@@ -118,8 +118,8 @@ class CompletionService:
                 raise AppModelConfigBrokenError()
 
             if is_model_config_override:
-                if not isinstance(user, Account):
-                    raise Exception("Only account can override model config")
+                # if not isinstance(user, Account):
+                #     raise Exception("Only account can override model config")
 
                 # validate config
                 model_config = AppModelConfigService.validate_configuration(
