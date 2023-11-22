@@ -51,6 +51,7 @@ class CompletionService:
         conversation_id = args['conversation_id'] if 'conversation_id' in args else None
 
         conversation = None
+        # 如果传了conversation_id，那么就去数据库里面找到这个conversation
         if conversation_id:
             conversation_filter = [
                 Conversation.id == args['conversation_id'],
@@ -81,6 +82,9 @@ class CompletionService:
                     raise AppModelConfigBrokenError()
             else:
                 conversation_override_model_configs = json.loads(conversation.override_model_configs)
+                if is_model_config_override:
+                    # conversation_override_model_configs= args['model_config']
+                    conversation_override_model_configs['model'] = args['model_config']['model']
 
                 app_model_config = AppModelConfig(
                     id=conversation.app_model_config_id,
@@ -88,8 +92,9 @@ class CompletionService:
                 )
 
                 app_model_config = app_model_config.from_model_config_dict(conversation_override_model_configs)
-
+            
             if is_model_config_override:
+                # app_model_config = args['model_config']
                 # build new app model config
                 if 'model' not in args['model_config']:
                     raise ValueError('model_config.model is required')
@@ -108,7 +113,8 @@ class CompletionService:
 
                 app_model_config = app_model_config.copy()
                 app_model_config.model = json.dumps(app_model_config_model)
-        else:
+        # 新对话
+        else: 
             if app_model.app_model_config_id is None:
                 raise AppModelConfigBrokenError()
 
