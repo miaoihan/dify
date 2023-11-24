@@ -38,7 +38,7 @@ class AppParameterApi(AppApiResource):
         'system_parameters': fields.Nested(system_parameters_fields)
     }
 
-    @marshal_with(parameters_fields)
+    # @marshal_with(parameters_fields)
     def get(self, app_model: App, end_user):
         """Retrieve app parameters."""
         app_model_config = app_model.app_model_config
@@ -55,8 +55,13 @@ class AppParameterApi(AppApiResource):
             'file_upload': app_model_config.file_upload_dict,
             'system_parameters': {
                 'image_file_size_limit': current_app.config.get('UPLOAD_IMAGE_FILE_SIZE_LIMIT')
-            }
+            },
+            'pre_prompt': app_model_config.pre_prompt,
+            'prompt_type': app_model_config.prompt_type,
+            'chat_prompt_config': app_model_config.chat_prompt_config,
+            'completion_prompt_config': app_model_config.completion_prompt_config,
         }
-
+        # 将app_model_config转换为json
+        
 
 api.add_resource(AppParameterApi, '/parameters')
