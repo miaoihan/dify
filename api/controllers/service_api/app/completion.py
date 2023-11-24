@@ -32,7 +32,7 @@ class CompletionApi(AppApiResource):
         parser.add_argument('response_mode', type=str, choices=['blocking', 'streaming'], location='json')
         parser.add_argument('user', type=str, location='json')
         parser.add_argument('retriever_from', type=str, required=False, default='dev', location='json')
-
+        parser.add_argument('model_config', type=dict, required=True, location='json')
         args = parser.parse_args()
 
         streaming = args['response_mode'] == 'streaming'
