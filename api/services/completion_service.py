@@ -35,7 +35,7 @@ class CompletionService:
                    from_source: str, streaming: bool = True,
                    is_model_config_override: bool = False) -> Union[dict, Generator]:
         # 如果传了model_config，is_model_config_override=true，否则false
-        is_model_config_override = True if 'model_config' in args else False    
+        is_model_config_override = True if args['model_config'] else False    
         # is streaming mode
         inputs = args['inputs']
         query = args['query']
@@ -84,6 +84,7 @@ class CompletionService:
                 conversation_override_model_configs = json.loads(conversation.override_model_configs)
                 if is_model_config_override:
                     # conversation_override_model_configs= args['model_config']
+                    # 仅覆盖model配置
                     conversation_override_model_configs['model'] = args['model_config']['model']
 
                 app_model_config = AppModelConfig(
@@ -117,30 +118,36 @@ class CompletionService:
         else: 
             if app_model.app_model_config_id is None:
                 raise AppModelConfigBrokenError()
-
+            # 最原始的config
             app_model_config = app_model.app_model_config
 
             if not app_model_config:
                 raise AppModelConfigBrokenError()
-
+            
             if is_model_config_override:
+                # app_model_config = app_model_config.copy()
+                # # 用户上传的model config
+                model_config_dict = args['model_config']['model']
+                # # # 仅覆盖model配置
+                app_model_config.model = json.dumps(model_config_dict)
+
                 # if not isinstance(user, Account):
                 #     raise Exception("Only account can override model config")
 
                 # validate config
-                model_config = AppModelConfigService.validate_configuration(
-                    tenant_id=app_model.tenant_id,
-                    account=user,
-                    config=args['model_config'],
-                    mode=app_model.mode
-                )
+                # model_config = AppModelConfigService.validate_configuration(
+                #     tenant_id=app_model.tenant_id,
+                #     account=user,
+                #     config=args['model_config'],
+                #     mode=app_model.mode
+                # )
 
-                app_model_config = AppModelConfig(
-                    id=app_model_config.id,
-                    app_id=app_model.id,
-                )
+                # app_model_config = AppModelConfig(
+                #     id=app_model_config.id,
+                #     app_id=app_model.id,
+                # )
 
-                app_model_config = app_model_config.from_model_config_dict(model_config)
+                # app_model_config = app_model_config.from_model_config_dict(model_config)
 
         # clean input by app_model_config form rules
         inputs = cls.get_cleaned_inputs(inputs, app_model_config)
