@@ -60,6 +60,8 @@ class AppParameterApi(AppApiResource):
             'prompt_type': app_model_config.prompt_type,
             'chat_prompt_config': app_model_config.chat_prompt_config,
             'completion_prompt_config': app_model_config.completion_prompt_config,
+            'model': app_model_config.model_dict,
+            # 'completion_params': app_model_config.model_dict.completion_params_dict,
         }
         # 将app_model_config转换为json
         

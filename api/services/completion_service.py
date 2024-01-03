@@ -33,9 +33,10 @@ class CompletionService:
     @classmethod
     def completion(cls, app_model: App, user: Union[Account, EndUser], args: Any,
                    from_source: str, streaming: bool = True,
-                   is_model_config_override: bool = False) -> Union[dict, Generator]:
+                   is_model_config_override: bool = False,
+                   is_override_config: bool = True) -> Union[dict, Generator]:
         # 如果传了model_config，is_model_config_override=true，否则false
-        is_model_config_override = True if args.get('model_config') else False    
+        is_model_config_override = True if args.get('model_config') else False   
         # is streaming mode
         inputs = args['inputs']
         query = args['query']
@@ -178,7 +179,7 @@ class CompletionService:
             'detached_user': user,
             'detached_conversation': conversation,
             'streaming': streaming,
-            'is_model_config_override': is_model_config_override,
+            'is_model_config_override': is_override_config,
             'retriever_from': args['retriever_from'] if 'retriever_from' in args else 'dev',
             'auto_generate_name': auto_generate_name
         })
