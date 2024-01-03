@@ -120,7 +120,7 @@ class ChatApi(AppApiResource):
                 user=end_user,
                 args=args,
                 from_source='api',
-                streaming=streaming
+                streaming=streaming,
                 is_override_config=args['is_override_config']
             )
 
