@@ -33,6 +33,8 @@ class CompletionApi(AppApiResource):
         parser.add_argument('user', type=str, location='json')
         parser.add_argument('retriever_from', type=str, required=False, default='dev', location='json')
         parser.add_argument('model_config', type=dict, required=False, location='json')
+        # 第三方调用是否覆盖app配置，默认覆盖
+        parser.add_argument('is_override_config', type=bool, required=False, default='True', location='json')
         args = parser.parse_args()
 
         streaming = args['response_mode'] == 'streaming'
@@ -49,6 +51,7 @@ class CompletionApi(AppApiResource):
                 args=args,
                 from_source='api',
                 streaming=streaming,
+                is_override_config=args['is_override_config']
             )
 
             return compact_response(response)
